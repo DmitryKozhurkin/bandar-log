@@ -1,0 +1,28 @@
+{
+  "name": "bandar-log",
+  "version": "1.0.0",
+  "description": "logger",
+  "main": "log.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitryKozhurkin/bandar-log.git"
+  },
+  "keywords": [
+    "logger",
+    "udp"
+  ],
+  "author": "Kozhurkin Dmitry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmitryKozhurkin/bandar-log/issues"
+  },
+  "homepage": "https://github.com/DmitryKozhurkin/bandar-log#readme",
+  "dependencies": {
+    "microtime": "2.1.5",
+    "moment": "2.18.1",
+    "winston": "2.3.1"
+  }
+}
