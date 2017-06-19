@@ -4,7 +4,7 @@ const path    = require('path');
 const cluster = require('cluster');
 const winston = require('winston');
 const moment  = require('moment');
-const UdpLog  = require('./log-udp').UdpLog;
+const UdpLog  = require('./log-udp');
 
 const cwd = process.cwd();
 const wid = cluster.isMaster ? 'master': `000${cluster.worker.id}`.slice(-2);

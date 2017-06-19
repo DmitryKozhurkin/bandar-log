@@ -1,23 +1,17 @@
 'use strict';
 
 const util    = require('util');
+const unirest = require('unirest');
 const winston = require('winston');
 
-const dgram  = require('dgram');
-const client = dgram.createSocket('udp4');
-
-const microtime = require('microtime');
-
-class UdpLog extends winston.Transport {
-
+class HttpLog extends winston.Transport {
 	constructor (options) {
 		super();
 
 		options = options || {};
 
 		this.level      = options.level || 'info';
-		this.host       = options.host;
-		this.port       = options.port;
+		this.url        = options.url;
 		this.colorize   = options.colorize || false;
 		this.project    = options.project;
 		this.logname    = options.logname;
@@ -28,7 +22,7 @@ class UdpLog extends winston.Transport {
 
 		this.logFormat  = options.logFormat || ((level, message) => message);
 
-		if (! this.host || ! this.port || ! this.project) {
+		if (! this.url || ! this.project) {
 			throw new Error('Missing required parameters: url and project');
 		}
 	}
@@ -69,21 +63,19 @@ class UdpLog extends winston.Transport {
 			hostname  : this.hostname,
 			level     : level,
 			timestamp : Date.now(),
-			microtime : microtime.now(),
 			message   : this.logFormat(level, message),
 			_sk       : this._sk
 		};
 
-		let json = JSON.stringify(data);
-		json = new Buffer(json).toString('base64');
-
-		client.send(json, 0, json.length, this.port, this.host, () => {
-			this.onResp && this.onResp(data);
-		});
+		unirest.post(this.url)
+			.timeout(this.timeout)
+			.send(data)
+			.end(response => {
+				this.onResp && this.onResp(response, data);
+			});
 	}
-	
 };
 
-winston.transports.UdpLog = UdpLog;
+winston.transports.HttpLog = HttpLog;
 
-module.exports = UdpLog;
+module.exports = HttpLog;
