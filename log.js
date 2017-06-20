@@ -33,6 +33,11 @@ function getLogger(options, logname, module) {
 	let transports = [];
 
 	for (let transport of options.transports) {
+
+		if (! transport) {
+			continue;
+		}
+
 		switch (transport.type) {
 
 			case TRANSPORT.CONSOLE:
@@ -69,8 +74,6 @@ function getLogger(options, logname, module) {
 				break;
 		}
 	}
-
-	console.log(transports.length);
 
 	logger = loggers[loggerId] = new winston.Logger({transports});
 
