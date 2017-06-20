@@ -12,6 +12,12 @@ const pid = process.pid;
 
 const loggers = {};
 
+const TRANSPORT = {
+	CONSOLE : 1,
+	FILE    : 2,
+	UDP     : 4
+};
+
 function getLogger(options, logname, module) {
 
 	let loggerId = `${logname}::${module.filename}`;
@@ -24,40 +30,52 @@ function getLogger(options, logname, module) {
 	let modulename = path.relative(cwd, module.filename).split('/').slice(-2).join('/');
 	let level      = options.level || 'error';
 
-	let transports = [
-		new winston.transports.Console({
-			colorize  : true,
-			timestamp : date => `[${moment(date).format('DD/MM/YYYY - HH:mm:ss:SSS')}]`,
-			level     : level,
-			label     : `wid=${wid}, pid=${pid}, ${logname}, ${modulename}`
-		}),
-		new winston.transports.File({
-			filename : path.resolve(cwd, `log/${logname}`),
-			level    : level,
-			json     : false
-		})
-	];
+	let transports = [];
 
-	if (options.udp) {
-		transports.push(new winston.transports.UdpLog({
-			level      : level,
-			colorize   : true,
-			host       : options.udp.host,
-			port       : options.udp.port,
-			secret     : options.udp.secret,
-			project    : options.udp.store.project,
-			hostname   : options.udp.store.hostname,
-			logname    : logname,
-			logFormat  : (level, message) => `[wid=${wid}, pid=${pid}, ${modulename}] ${message}`,
-			onResp     : options.udp.onResp
-		}));
+	for (let transport of options.transports) {
+		switch (transport.type) {
+
+			case TRANSPORT.CONSOLE:
+				transports.push(new winston.transports.Console({
+					colorize  : true,
+					timestamp : date => `[${moment(date).format('DD/MM/YYYY - HH:mm:ss:SSS')}]`,
+					level     : transport.level || level,
+					label     : `wid=${wid}, pid=${pid}, ${logname}, ${modulename}`
+				}));
+				break;
+
+			case TRANSPORT.FILE:
+				const logdir = transport.dir || 'log';
+				transports.push(new winston.transports.File({
+					filename : path.resolve(cwd, logdir, logname),
+					level    : transport.level || level,
+					json     : false
+				}));
+				break;
+
+			case TRANSPORT.UDP:
+				transports.push(new winston.transports.UdpLog({
+					level      : transport.level || level,
+					colorize   : true,
+					host       : transport.host,
+					port       : transport.port,
+					secret     : transport.secret,
+					project    : transport.store.project,
+					hostname   : transport.store.hostname,
+					logname    : logname,
+					logFormat  : (level, message) => `[wid=${wid}, pid=${pid}, ${modulename}] ${message}`,
+					onResp     : transport.onResp
+				}));
+				break;
+		}
 	}
 
-	logger = new winston.Logger({transports});
+	console.log(transports.length);
 
-	loggers[loggerId] = logger;
+	logger = loggers[loggerId] = new winston.Logger({transports});
 
 	return logger;
 }
 
 module.exports = getLogger;
+module.exports.TRANSPORT = TRANSPORT;
