@@ -1,6 +1,10 @@
 # bandar-log
 
+```npm i bandar-log```
+
 ```
+const bandarlog = require('bandar-log');
+
 const options = {
 	level: 'debug',
 	transports: [
