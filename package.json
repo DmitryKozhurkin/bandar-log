@@ -1,6 +1,6 @@
 {
   "name": "bandar-log",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "logger",
   "main": "log.js",
   "scripts": {

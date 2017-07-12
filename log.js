@@ -48,7 +48,7 @@ function getLogger(options, logname, module) {
 					colorize  : true,
 					timestamp : transport.timestamp || timestamp,
 					level     : transport.level || level,
-					label     : transport.label
+					label     : transport.label || label
 				}));
 				break;
 
@@ -58,7 +58,7 @@ function getLogger(options, logname, module) {
 					timestamp : transport.timestamp || timestamp,
 					filename  : path.resolve(cwd, logdir, logname),
 					level     : transport.level || level,
-					label     : transport.label,
+					label     : transport.label || label,
 					json      : false
 				}));
 				break;
