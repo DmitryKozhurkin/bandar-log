@@ -29,8 +29,7 @@ function getLogger(options, logname, module) {
 
 	let modulename = path.relative(cwd, module.filename).split('/').slice(-2).join('/');
 	let level      = options.level || 'error';
-
-	let label      = `wid=${wid}, pid=${pid}, ${logname}, ${modulename}`;
+	let label      = options.label || `wid=${wid}, pid=${pid}, ${logname}, ${modulename}`;
 	let timestamp  = (date) => `[${moment(date).format('DD/MM/YYYY - HH:mm:ss:SSS')}]`;
 	let logFormat  = (level, message) => `[wid=${wid}, pid=${pid}, ${modulename}] ${message}`;
 
@@ -49,7 +48,7 @@ function getLogger(options, logname, module) {
 					colorize  : true,
 					timestamp : transport.timestamp || timestamp,
 					level     : transport.level || level,
-					label     : label
+					label     : transport.label
 				}));
 				break;
 
@@ -59,7 +58,7 @@ function getLogger(options, logname, module) {
 					timestamp : transport.timestamp || timestamp,
 					filename  : path.resolve(cwd, logdir, logname),
 					level     : transport.level || level,
-					label     : label,
+					label     : transport.label,
 					json      : false
 				}));
 				break;

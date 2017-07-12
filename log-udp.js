@@ -81,7 +81,6 @@ class UdpLog extends winston.Transport {
 			this.onResp && this.onResp(data);
 		});
 	}
-	
 };
 
 winston.transports.UdpLog = UdpLog;
