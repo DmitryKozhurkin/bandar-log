@@ -30,6 +30,10 @@ function getLogger(options, logname, module) {
 	let modulename = path.relative(cwd, module.filename).split('/').slice(-2).join('/');
 	let level      = options.level || 'error';
 
+	let label      = `wid=${wid}, pid=${pid}, ${logname}, ${modulename}`;
+	let timestamp  = (date) => `[${moment(date).format('DD/MM/YYYY - HH:mm:ss:SSS')}]`;
+	let logFormat  = (level, message) => `[wid=${wid}, pid=${pid}, ${modulename}] ${message}`;
+
 	let transports = [];
 
 	for (let transport of options.transports) {
@@ -43,18 +47,20 @@ function getLogger(options, logname, module) {
 			case TRANSPORT.CONSOLE:
 				transports.push(new winston.transports.Console({
 					colorize  : true,
-					timestamp : date => `[${moment(date).format('DD/MM/YYYY - HH:mm:ss:SSS')}]`,
+					timestamp : transport.timestamp || timestamp,
 					level     : transport.level || level,
-					label     : `wid=${wid}, pid=${pid}, ${logname}, ${modulename}`
+					label     : label
 				}));
 				break;
 
 			case TRANSPORT.FILE:
 				const logdir = transport.dir || 'log';
 				transports.push(new winston.transports.File({
-					filename : path.resolve(cwd, logdir, logname),
-					level    : transport.level || level,
-					json     : false
+					timestamp : transport.timestamp || timestamp,
+					filename  : path.resolve(cwd, logdir, logname),
+					level     : transport.level || level,
+					label     : label,
+					json      : false
 				}));
 				break;
 
@@ -68,7 +74,7 @@ function getLogger(options, logname, module) {
 					project    : transport.store.project,
 					hostname   : transport.store.hostname,
 					logname    : logname,
-					logFormat  : (level, message) => `[wid=${wid}, pid=${pid}, ${modulename}] ${message}`,
+					logFormat  : transport.logFormat || logFormat,
 					onResp     : transport.onResp
 				}));
 				break;
