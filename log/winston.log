@@ -1,0 +1,6 @@
+[01/11/2017 - 13:07:23:778] - info: [wid=master, pid=31381, winston.log, test.js] test info
+[01/11/2017 - 13:07:23:780] - debug: [wid=master, pid=31381, winston.log, test.js] test debug
+[01/11/2017 - 13:07:23:780] - error: [wid=master, pid=31381, winston.log, test.js] test error
+[01/11/2017 - 13:10:06:063] - info: [wid=master, pid=31514, winston.log, test.js] test info
+[01/11/2017 - 13:10:06:064] - debug: [wid=master, pid=31514, winston.log, test.js] test debug
+[01/11/2017 - 13:10:06:064] - error: [wid=master, pid=31514, winston.log, test.js] test error

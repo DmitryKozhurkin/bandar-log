@@ -41,42 +41,44 @@ function getLogger(options, logname, module) {
 			continue;
 		}
 
+		let params = transport.params || {};
+
 		switch (transport.type) {
 
-			case TRANSPORT.CONSOLE:
-				transports.push(new winston.transports.Console({
-					colorize  : true,
-					timestamp : transport.timestamp || timestamp,
-					level     : transport.level || level,
-					label     : transport.label || label
-				}));
-				break;
+		  case TRANSPORT.CONSOLE:
+		    transports.push(new winston.transports.Console(Object.assign({
+		      colorize  : true,
+		      timestamp : transport.timestamp || timestamp,
+		      level     : transport.level || level,
+		      label     : transport.label || label
+		    }, params)));
+		    break;
 
-			case TRANSPORT.FILE:
-				const logdir = transport.dir || 'log';
-				transports.push(new winston.transports.File({
-					timestamp : transport.timestamp || timestamp,
-					filename  : path.resolve(cwd, logdir, logname),
-					level     : transport.level || level,
-					label     : transport.label || label,
-					json      : false
-				}));
-				break;
+		  case TRANSPORT.FILE:
+		    const logdir = transport.dir || 'log';
+		    transports.push(new winston.transports.File(Object.assign({
+		      timestamp : transport.timestamp || timestamp,
+		      filename  : path.resolve(cwd, logdir, logname),
+		      level     : transport.level || level,
+		      label     : transport.label || label,
+		      json      : false,
+		    }, params)));
+		    break;
 
-			case TRANSPORT.UDP:
-				transports.push(new winston.transports.UdpLog({
-					level      : transport.level || level,
-					colorize   : true,
-					host       : transport.host,
-					port       : transport.port,
-					secret     : transport.secret,
-					project    : transport.store.project,
-					hostname   : transport.store.hostname,
-					logname    : logname,
-					logFormat  : transport.logFormat || logFormat,
-					onResp     : transport.onResp
-				}));
-				break;
+		  case TRANSPORT.UDP:
+		    transports.push(new winston.transports.UdpLog(Object.assign({
+		      level      : transport.level || level,
+		      colorize   : true,
+		      host       : transport.host,
+		      port       : transport.port,
+		      secret     : transport.secret,
+		      project    : transport.store.project,
+		      hostname   : transport.store.hostname,
+		      logname    : logname,
+		      logFormat  : transport.logFormat || logFormat,
+		      onResp     : transport.onResp
+		    }, params)));
+		    break;
 		}
 	}
 
