@@ -1,6 +1,6 @@
 {
   "name": "bandar-log",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "logger",
   "main": "log.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/DmitryKozhurkin/bandar-log#readme",
   "dependencies": {
-    "microtime": "2.1.5",
+    "microtime": "^3.0.0",
     "moment": "2.18.1",
     "unirest": "0.5.1",
     "winston": "2.3.1"
