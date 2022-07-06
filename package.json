@@ -22,7 +22,7 @@
   "homepage": "https://github.com/DmitryKozhurkin/bandar-log#readme",
   "dependencies": {
     "microtime": "^3.0.0",
-    "moment": "2.18.1",
+    "moment": "2.29.4",
     "unirest": "0.5.1",
     "winston": "2.3.1"
   }
